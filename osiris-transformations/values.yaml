@@ -17,15 +17,15 @@ workflowTemplate:
   # * OnWorkflowCompletion - delete pods when workflow is completed
   # * OnWorkflowSuccess - delete pods when workflow is successful
   podGC: OnPodSuccess
-  parallelism: 10
+  parallelism: 1
   nodeSelector:
     agentpool: default
   memory:
-    limit: "4Gi"
-    request: "2Gi"
+    limit: "512Mi"
+    request: "256Mi"
   cpu:
-    limit: "1"
-    request: "500m"
+    limit: "500m"
+    request: "250m"
 
 cron: 
   schedule: "0 * * * *"
