@@ -1,0 +1,71 @@
+global:
+  app: transformation
+  transformation: dmi-weather
+  appName: osiris-transform-dmi-weather
+  secretName: dmi-weather
+  environment: test
+
+workflowTemplate:
+  image:
+    repository: transform-dmi_weather
+    tag: latest
+  command:
+    - "python" 
+    - "-m"
+    - "transform_dmi_weather" 
+
+  # Pod GC strategy must be one of the following:
+  # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
+  # * OnPodSuccess - delete pods immediately when pod is successful
+  # * OnWorkflowCompletion - delete pods when workflow is completed
+  # * OnWorkflowSuccess - delete pods when workflow is successful
+  podGC: OnPodSuccess
+  parallelism: 10
+  nodeSelector:
+    agentpool: default
+  memory:
+    limit: "4Gi"
+    request: "2Gi"
+  cpu:
+    limit: "1"
+    request: "500m"
+
+cron: 
+  schedule: "0 * * * *"
+  concurrencyPolicy: "Forbid"
+
+config:
+  conf.ini: |
+    [Logging]
+    configuration_file = log.conf
+    [Azure Storage]
+    account_url = https://<storage_account>.dfs.core.windows.net
+    filesystem_name = <container_name>
+    [Datasets]
+    source_hir = <source_hir_guid>
+    source_enetnea = <source_enetnea_guid>
+    destination_dt = <destination_dt_guid>
+    destination_coords = <destination_coords_guid>
+    time_resolution = <time_resolution: NONE, YEAR, MONTH, DAY, HOUR, MINUTE>
+  log.conf: |
+    [loggers]
+    keys=root
+    [handlers]
+    keys=consoleHandler,fileHandler
+    [formatters]
+    keys=fileFormatter,consoleFormatter
+    [logger_root]
+    level=WARNING
+    handlers=consoleHandler
+    [handler_consoleHandler]
+    class=StreamHandler
+    formatter=consoleFormatter
+    args=(sys.stdout,)
+    [handler_fileHandler]
+    class=FileHandler
+    formatter=fileFormatter
+    args=('logfile.log',)
+    [formatter_fileFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+    [formatter_consoleFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s

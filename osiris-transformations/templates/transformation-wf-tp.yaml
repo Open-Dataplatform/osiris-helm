@@ -1,0 +1,82 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: {{ .Values.global.appName }}-wf-tp
+  labels:
+    app: {{ .Values.global.app }}
+    transformation: {{ .Values.global.transformation }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  entrypoint: transformation
+  podGC:
+    # Pod GC strategy must be one of the following:
+    # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
+    # * OnPodSuccess - delete pods immediately when pod is successful
+    # * OnWorkflowCompletion - delete pods when workflow is completed
+    # * OnWorkflowSuccess - delete pods when workflow is successful
+    strategy: {{ .Values.workflowTemplate.podGC }}
+  parallelism: {{ .Values.workflowTemplate.parallelism }}
+  templates:
+  - name: transformation
+    inputs:
+      parameters:
+      - name: argument
+      - name: value
+    {{- if .Values.workflowTemplate.nodeSelector }}
+    nodeSelector:
+{{ .Values.workflowTemplate.nodeSelector | toYaml | indent 6}}
+    {{- end }}
+    podSpecPatch: |
+      containers:
+      - name: main
+        resources:
+          limits:
+            memory: {{ .Values.workflowTemplate.memory.limit | quote }}
+            cpu: {{ .Values.workflowTemplate.cpu.limit | quote }}
+          requests:
+            memory: {{ .Values.workflowTemplate.memory.request | quote }}
+            cpu: {{ .Values.workflowTemplate.cpu.request | quote }}
+    metrics:
+      prometheus: 
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+        - key: name
+          value: {{ .Values.global.appName }}
+        - key: component
+          value: {{ .Values.global.app }}
+        - key: status
+          value: "{{`{{status}}`}}"    # Argo variable in `labels`
+        counter:
+          value: "1"
+    volumes:
+      - name: transformation-cm
+        configMap:
+          name: {{ .Values.global.appName }}-cm
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "{{ .Values.secretName }}-authentication-reader"
+        vault.hashicorp.com/auth-path: "auth/kubernetes-{{ .Values.environment }}"
+        vault.hashicorp.com/agent-inject-secret-credentials.ini: "{{ .Values.secretName }}-authentication/data/credentials"
+        vault.hashicorp.com/agent-inject-template-credentials.ini: |
+          {{`{{-`}} with secret "{{ .Values.secretName }}-authentication/data/credentials" {{`-}}`}}
+              {{`[Authorization]
+              tenant_id = {{ .Data.data.tenant_id }}
+              client_id = {{ .Data.data.client_id }}
+              client_secret = {{ .Data.data.secret }}
+          {{- end -}}`}}
+    container:
+      image: {{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}
+      command: 
+      {{- if .Values.workflowTemplate.command }}
+{{ .Values.workflowTemplate.command | toYaml | indent 6 }}
+      {{- end }}
+      - "{{`{{inputs.parameters.argument}}`}}" 
+      - "{{`{{inputs.parameters.value}}`}}"
+      volumeMounts:
+        - name: transformation-cm
+          mountPath: "/etc/osiris/"
+          readOnly: true
