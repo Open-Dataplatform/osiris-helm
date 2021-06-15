@@ -63,11 +63,8 @@ spec:
         vault.hashicorp.com/agent-inject-secret-credentials.ini: "{{ .Values.global.secretName }}-authentication/data/credentials"
         vault.hashicorp.com/agent-inject-template-credentials.ini: |
           {{`{{-`}} with secret "{{ .Values.global.secretName }}-authentication/data/credentials" {{`-}}`}}
-              {{`[Authorization]
-              tenant_id = {{ .Data.data.tenant_id }}
-              client_id = {{ .Data.data.client_id }}
-              client_secret = {{ .Data.data.secret }}
-          {{- end -}}`}}
+{{ .Values.secretTemplate | indent 12 }}
+          {{`{{- end -}}`}}
     container:
       image: {{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}
       command: 

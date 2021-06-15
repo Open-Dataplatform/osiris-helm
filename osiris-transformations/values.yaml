@@ -31,6 +31,12 @@ cron:
   schedule: "0 * * * *"
   concurrencyPolicy: "Forbid"
 
+secretTemplate: |
+  [Authorization]
+  tenant_id = {{ .Data.data.tenant_id }}
+  client_id = {{ .Data.data.client_id }}
+  client_secret = {{ .Data.data.secret }}
+
 config:
   conf.ini: |
     [Logging]
