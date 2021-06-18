@@ -9,7 +9,7 @@ workflowTemplate:
   image:
     repository: transform-dmi_weather
     tag: latest
-  command:
+  command: python -m transform-dmi_weather
 
   # Pod GC strategy must be one of the following:
   # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)

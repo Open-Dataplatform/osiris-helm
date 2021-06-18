@@ -66,13 +66,10 @@ spec:
           {{`{{- end -}}`}}
     container:
       image: {{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}
-      command: 
-      {{- if .Values.workflowTemplate.command }}
-{{ .Values.workflowTemplate.command | toYaml | indent 6 }}
-      {{- end }}
+      command: ["/bin/sh", "-c"]
       args:
       - |
-        "{{`{{inputs.parameters.arguments}}`}}" 
+{{ .Values.workflowTemplate.command | indent 8 }} {{`{{inputs.parameters.arguments}}`}}
       volumeMounts:
         - name: transformation-cm
           mountPath: "/etc/osiris/"
