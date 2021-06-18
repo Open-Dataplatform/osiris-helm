@@ -22,8 +22,7 @@ spec:
   - name: transformation
     inputs:
       parameters:
-      - name: argument
-      - name: value
+      - name: arguments
     {{- if .Values.workflowTemplate.nodeSelector }}
     nodeSelector:
 {{ .Values.workflowTemplate.nodeSelector | toYaml | indent 6}}
@@ -71,8 +70,9 @@ spec:
       {{- if .Values.workflowTemplate.command }}
 {{ .Values.workflowTemplate.command | toYaml | indent 6 }}
       {{- end }}
-      - "{{`{{inputs.parameters.argument}}`}}" 
-      - "{{`{{inputs.parameters.value}}`}}"
+      args:
+      - |
+        "{{`{{inputs.parameters.arguments}}`}}" 
       volumeMounts:
         - name: transformation-cm
           mountPath: "/etc/osiris/"

@@ -25,7 +25,5 @@ spec:
             template: transformation
           arguments:
             parameters:
-            - name: argument
-              value: "{{``}}"
-            - name: value
+            - name: arguments
               value: "{{``}}"
