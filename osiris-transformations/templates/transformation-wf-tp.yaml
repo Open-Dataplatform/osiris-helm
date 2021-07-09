@@ -65,7 +65,7 @@ spec:
 {{ .Values.secretTemplate | indent 12 }}
           {{`{{- end -}}`}}
     container:
-      image: {{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}
+      image: "{{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}"
       command: ["/bin/sh", "-c"]
       args:
       - |
