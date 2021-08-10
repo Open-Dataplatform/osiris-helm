@@ -19,7 +19,7 @@ workflowTemplate:
   podGC: OnPodSuccess
   parallelism: 1
   nodeSelector:
-    agentpool: default
+    agentpool: worker
   memory:
     limit: "512Mi"
     request: "256Mi"
