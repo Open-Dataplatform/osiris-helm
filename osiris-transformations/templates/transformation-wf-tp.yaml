@@ -27,16 +27,6 @@ spec:
     nodeSelector:
 {{ .Values.workflowTemplate.nodeSelector | toYaml | indent 6}}
     {{- end }}
-    podSpecPatch: |
-      containers:
-      - name: main
-        resources:
-          limits:
-            memory: {{ .Values.workflowTemplate.memory.limit | quote }}
-            cpu: {{ .Values.workflowTemplate.cpu.limit | quote }}
-          requests:
-            memory: {{ .Values.workflowTemplate.memory.request | quote }}
-            cpu: {{ .Values.workflowTemplate.cpu.request | quote }}
     metrics:
       prometheus: 
       - name: result_counter
