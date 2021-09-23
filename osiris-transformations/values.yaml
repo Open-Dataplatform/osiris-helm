@@ -20,14 +20,11 @@ workflowTemplate:
   parallelism: 1
   nodeSelector:
     agentpool: worker
-  memory:
-    limit: "512Mi"
-    request: "256Mi"
-  cpu:
-    limit: "500m"
-    request: "250m"
 
-cron: 
+jaeger:
+  enabled: false
+
+cron:
   schedule: "0 * * * *"
   concurrencyPolicy: "Forbid"
 
