@@ -22,7 +22,7 @@ workflowTemplate:
     agentpool: worker
 
 jaeger:
-  enabled: false
+  enabled: true
 
 cron:
   schedule: "0 * * * *"
