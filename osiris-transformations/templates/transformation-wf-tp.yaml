@@ -9,6 +9,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  podMetadata:
+    annotations:
+      workflows.argoproj.io/kill-cmd-jaeger-agent: '["sh", "-c", "kill -%d $(pidof entrypoint.sh)"]'
   entrypoint: transformation
   podGC:
     # Pod GC strategy must be one of the following:
