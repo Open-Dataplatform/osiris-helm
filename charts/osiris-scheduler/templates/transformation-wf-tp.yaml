@@ -1,0 +1,90 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: {{ template "osiris-scheduler.name" . }}-wf-tp
+  labels:
+    type: {{ .Values.global.type }}
+    name: {{ .Values.global.name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  entrypoint: run
+  podGC:
+    # Pod GC strategy must be one of the following:
+    # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
+    # * OnPodSuccess - delete pods immediately when pod is successful
+    # * OnWorkflowCompletion - delete pods when workflow is completed
+    # * OnWorkflowSuccess - delete pods when workflow is successful
+    strategy: {{ .Values.workflowTemplate.podGC }}
+  parallelism: {{ .Values.workflowTemplate.parallelism }}
+  templates:
+  - name: run
+    inputs:
+      parameters:
+      - name: arguments
+    {{- if .Values.workflowTemplate.nodeSelector }}
+    nodeSelector:
+{{ .Values.workflowTemplate.nodeSelector | toYaml | indent 6}}
+    {{- end }}
+    metrics:
+      prometheus:
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+        - key: name
+          value: {{ .Values.global.name }}
+        - key: component
+          value: {{ .Values.global.type }}
+        - key: status
+          value: "{{`{{status}}`}}"    # Argo variable in `labels`
+        counter:
+          value: "1"
+    volumes:
+      - name: app-config-cm
+        configMap:
+          name: {{ template "osiris-scheduler.name" . }}-cm
+      - name: app-secrets
+        secret:
+          secretName: app-secrets
+    container:
+      image: "{{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}"
+      imagePullPolicy: {{ .Values.workflowTemplate.image.pullPolicy }}
+      command: ["/bin/sh", "-c"]
+      args:
+      - |
+{{ .Values.workflowTemplate.command | indent 8 }} {{`{{inputs.parameters.arguments}}`}}
+      volumeMounts:
+        - name: app-config-cm
+          mountPath: "/etc/osiris/"
+          readOnly: true
+          subPath: conf.ini
+        - name: app-secrets
+          mountPath: "/etc/osiris/"
+          readOnly: true
+          subPath: credentials.ini
+{{- if .Values.jaeger.enabled }}
+    sidecars:
+      - name: jaeger-agent
+        image: jaegertracing/jaeger-agent:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 5775
+            name: zk-compact-trft
+            protocol: UDP
+          - containerPort: 5778
+            name: config-rest
+            protocol: TCP
+          - containerPort: 6831
+            name: jg-compact-trft
+            protocol: UDP
+          - containerPort: 6832
+            name: jg-binary-trft
+            protocol: UDP
+          - containerPort: 14271
+            name: admin-http
+            protocol: TCP
+        args:
+          - --reporter.grpc.host-port=dns:///tooling-jaeger-operator-{{ .Values.global.environment }}-jaeger-collector-headless.monitoring:14250
+          - --reporter.type=grpc
+{{- end }}
