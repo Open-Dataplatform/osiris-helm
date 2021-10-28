@@ -1,8 +1,0 @@
-apiVersion: v2
-name: osiris-transformations
-description: A Helm chart that will hold a template for osiris-transformations
-type: application
-version: 0.1.0
-
-maintainers:
-  - name: MadsHT
