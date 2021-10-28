@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: {{ .Values.global.appName }}-cron-wf
+  labels:
+    app: {{ .Values.global.app }}
+    transformation: {{ .Values.global.transformation }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: "{{ .Values.cron.schedule }}"
+  concurrencyPolicy: "{{ .Values.cron.concurrencyPolicy }}"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  workflowSpec:
+    entrypoint: cron-tasks
+    templates:
+    - name: cron-tasks
+      dag:
+        tasks:
+        - name: transform
+          templateRef:
+            name: {{ .Values.global.appName }}-wf-tp
+            template: transformation
+          arguments:
+            parameters:
+            - name: arguments
+              value: "{{``}}"

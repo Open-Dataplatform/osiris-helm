@@ -1,0 +1,62 @@
+global:
+  app: transformation
+  transformation: dmi-weather
+  appName: osiris-transform-dmi-weather
+  secretName: dmi-weather
+  environment: test
+
+workflowTemplate:
+  image:
+    repository: transform-dmi_weather
+    tag: latest
+  command: python -m transform-dmi_weather
+
+  # Pod GC strategy must be one of the following:
+  # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
+  # * OnPodSuccess - delete pods immediately when pod is successful
+  # * OnWorkflowCompletion - delete pods when workflow is completed
+  # * OnWorkflowSuccess - delete pods when workflow is successful
+  podGC: OnPodSuccess
+  parallelism: 1
+  nodeSelector:
+    agentpool: worker
+
+jaeger:
+  enabled: true
+
+cron:
+  schedule: "0 * * * *"
+  concurrencyPolicy: "Forbid"
+
+secretTemplate: |
+  [Authorization]
+  tenant_id = {{ .Data.data.tenant_id }}
+  client_id = {{ .Data.data.client_id }}
+  client_secret = {{ .Data.data.secret }}
+
+config:
+  conf.ini: |
+    [Logging]
+    configuration_file = log.conf
+  log.conf: |
+    [loggers]
+    keys=root
+    [handlers]
+    keys=consoleHandler,fileHandler
+    [formatters]
+    keys=fileFormatter,consoleFormatter
+    [logger_root]
+    level=WARNING
+    handlers=consoleHandler
+    [handler_consoleHandler]
+    class=StreamHandler
+    formatter=consoleFormatter
+    args=(sys.stdout,)
+    [handler_fileHandler]
+    class=FileHandler
+    formatter=fileFormatter
+    args=('logfile.log',)
+    [formatter_fileFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+    [formatter_consoleFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
