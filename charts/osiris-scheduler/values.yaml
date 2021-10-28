@@ -3,11 +3,11 @@ global:
   # * transformation
   # * adapter
   # * something else
-  type: <app-type>
+  type: transformation
   # The name of the application that should be running
-  name: <app-name>
+  name: rando
   # Name of the secret needed for the app to run
-  secretName: <sec-name>
+  secretName: rando
   # The environment the the app will run in
   environment: test
 
@@ -15,7 +15,7 @@ workflowTemplate:
   # the image that the scheduler will atempt to run
   image:
     # The image repo
-    repository: <repo-url>
+    repository: image/docker
     # The image tag
     tag: latest
     # The pullPolicy
@@ -25,7 +25,7 @@ workflowTemplate:
     pullPolicy: Always
 
   # The command needed to run the application code
-  command: <command>
+  command: python -m rando
 
   # Pod GC strategy must be one of the following:
   # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
