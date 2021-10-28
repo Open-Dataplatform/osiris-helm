@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: {{ .Values.global.appName }}-wf-tp
+  name: {{ template "osiris-scheduler.name" . }}-wf-tp
   labels:
-    app: {{ .Values.global.app }}
-    transformation: {{ .Values.global.transformation }}
+    type: {{ .Values.global.type }}
+    name: {{ .Values.global.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  entrypoint: transformation
+  entrypoint: run
   podGC:
     # Pod GC strategy must be one of the following:
     # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
@@ -19,7 +19,7 @@ spec:
     strategy: {{ .Values.workflowTemplate.podGC }}
   parallelism: {{ .Values.workflowTemplate.parallelism }}
   templates:
-  - name: transformation
+  - name: run
     inputs:
       parameters:
       - name: arguments
@@ -33,38 +33,36 @@ spec:
         help: "Count of step execution by result status"
         labels:
         - key: name
-          value: {{ .Values.global.appName }}
+          value: {{ .Values.global.name }}
         - key: component
-          value: {{ .Values.global.app }}
+          value: {{ .Values.global.type }}
         - key: status
           value: "{{`{{status}}`}}"    # Argo variable in `labels`
         counter:
           value: "1"
     volumes:
-      - name: transformation-cm
+      - name: app-config-cm
         configMap:
-          name: {{ .Values.global.appName }}-cm
-    metadata:
-      annotations:
-        vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/agent-pre-populate-only: "true"
-        vault.hashicorp.com/role: "{{ .Values.global.secretName }}-authentication-reader"
-        vault.hashicorp.com/auth-path: "auth/kubernetes-{{ .Values.global.environment }}"
-        vault.hashicorp.com/agent-inject-secret-credentials.ini: "{{ .Values.global.secretName }}-authentication/data/credentials"
-        vault.hashicorp.com/agent-inject-template-credentials.ini: |
-          {{`{{-`}} with secret "{{ .Values.global.secretName }}-authentication/data/credentials" {{`-}}`}}
-{{ .Values.secretTemplate | indent 12 }}
-          {{`{{- end -}}`}}
+          name: {{ template "osiris-scheduler.name" . }}-cm
+      - name: app-secrets
+        secret:
+          secretName: app-secrets
     container:
       image: "{{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}"
+      imagePullPolicy: {{ .Values.workflowTemplate.image.pullPolicy }}
       command: ["/bin/sh", "-c"]
       args:
       - |
 {{ .Values.workflowTemplate.command | indent 8 }} {{`{{inputs.parameters.arguments}}`}}
       volumeMounts:
-        - name: transformation-cm
+        - name: app-config-cm
           mountPath: "/etc/osiris/"
           readOnly: true
+          subPath: conf.ini
+        - name: app-secrets
+          mountPath: "/etc/osiris/"
+          readOnly: true
+          subPath: credentials.ini
 {{- if .Values.jaeger.enabled }}
     sidecars:
       - name: jaeger-agent

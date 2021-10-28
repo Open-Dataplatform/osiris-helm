@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: CronWorkflow
 metadata:
-  name: {{ .Values.global.appName }}-cron-wf
+  name: {{ template "osiris-scheduler.name" . }}-cron-wf
   labels:
-    app: {{ .Values.global.app }}
-    transformation: {{ .Values.global.transformation }}
+    type: {{ .Values.global.type }}
+    name: {{ .Values.global.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -21,8 +21,8 @@ spec:
         tasks:
         - name: transform
           templateRef:
-            name: {{ .Values.global.appName }}-wf-tp
-            template: transformation
+            name: {{ template "osiris-scheduler.name" . }}-wf-tp
+            template: run
           arguments:
             parameters:
             - name: arguments
