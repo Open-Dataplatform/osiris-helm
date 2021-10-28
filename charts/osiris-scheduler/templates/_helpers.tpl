@@ -2,5 +2,6 @@
 Expand the name of the chart.
 */}}
 {{- define "osiris-scheduler.name" -}}
-{{- default (printf "%s-%s-%s" "osiris" .Values.global.type .Values.global.name) | trunc 63 | trimSuffix "-" }}
+{{- $typeShort := (substr 0 1 .Values.global.type) -}}
+{{- default (printf "%s-%s" $typeShort .Values.global.name) | trunc 63 | trimSuffix "-" }}
 {{- end }}

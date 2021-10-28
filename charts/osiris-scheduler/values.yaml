@@ -4,7 +4,7 @@ global:
   # * adapter
   # * something else
   type: transformation
-  # The name of the application that should be running
+  # The name of the application that should be running (Has to be DNS compliant)
   name: rando
   # Name of the secret needed for the app to run
   secretName: rando
