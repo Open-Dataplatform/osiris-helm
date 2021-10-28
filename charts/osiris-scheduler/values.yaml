@@ -56,11 +56,17 @@ cron:
   # * Forbid: do not allow any new while there are old
   concurrencyPolicy: "Forbid"
 
+# This will be appended on the `charts/osiris-scheduler/files/config.ini`
+# The config.ini file exists for me to template default values pr environment.
+config: |
+  [Datasets]
+  source = a1248010-e46e-4491-11de-08d8fda51d00
+  destination = 1bf31823-4e55-4956-88cc-08d9834acce7
+  model = harmonie
+  batch_size = 5
+
 # Config take the content a builds files from the and adds them in the pod under /etc/osiris/
-config:
-  conf.ini: |
-    [Logging]
-    configuration_file = log.conf
+configFiles:
   log.conf: |
     [loggers]
     keys=root
