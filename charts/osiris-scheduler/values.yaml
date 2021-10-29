@@ -8,8 +8,11 @@ global:
   name: rando
   # Name of the secret needed for the app to run
   secretName: rando
+
+  # OBS THIS IS OVERRIDEN BY YGGDRASIL
   # The server to get the secret from
   secretServer: http://vault.tooling.svc:8200
+  # OBS THIS IS OVERRIDEN BY YGGDRASIL
   # The environment the the app will run in
   environment: test
 
