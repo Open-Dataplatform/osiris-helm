@@ -53,16 +53,14 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
       - |
-{{ .Values.workflowTemplate.command | indent 8 }} {{`{{inputs.parameters.arguments}}`}}
+{{ .Values.workflowTemplate.command | indent 8 }} --conf {{ .Values.workflowTemplate.configPath }} --credentials {{ .Values.workflowTemplate.credentialsPath }} {{`{{inputs.parameters.arguments}}`}}
       volumeMounts:
         - name: app-config-cm
-          mountPath: "/etc/osiris/"
+          mountPath: "{{ .Values.workflowTemplate.configPath | dir}}"
           readOnly: true
-          subPath: conf.ini
         - name: app-secrets
-          mountPath: "/etc/osiris/"
+          mountPath: "{{ .Values.workflowTemplate.credentialsPath | dir}}"
           readOnly: true
-          subPath: credentials.ini
 {{- if .Values.jaeger.enabled }}
     sidecars:
       - name: jaeger-agent

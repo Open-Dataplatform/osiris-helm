@@ -8,8 +8,11 @@ global:
   name: rando
   # Name of the secret needed for the app to run
   secretName: rando
+
+  # OBS THIS IS OVERRIDEN BY YGGDRASIL
   # The server to get the secret from
   secretServer: http://vault.tooling.svc:8200
+  # OBS THIS IS OVERRIDEN BY YGGDRASIL
   # The environment the the app will run in
   environment: test
 
@@ -28,6 +31,14 @@ workflowTemplate:
 
   # The command needed to run the application code
   command: python -m rando
+
+  # The path the config will be on
+  # The name of the file is also derived from this
+  configPath: /etc/osiris-conf/conf.ini
+
+  # The path the credentils file should be on
+  # The name of the file is also derived from this
+  credentialsPath: /etc/osiris-creds/credentials.ini
 
   # Pod GC strategy must be one of the following:
   # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
@@ -61,6 +72,16 @@ cron:
 # This will be appended on the `charts/osiris-scheduler/files/config.ini`
 # The config.ini file exists for me to template default values pr environment.
 config: |
+  [Logging]
+  configuration_file = /etc/osiris/log.conf
+  disable_logger_labels =
+      apache_beam.runners.portability.fn_api_runner.fn_runner
+      azure.core.pipeline.policies.http_logging_policy
+      azure.identity._internal.get_token_mixin
+      apache_beam.runners.portability.fn_api_runner.translations
+      apache_beam.runners.worker.statecache
+      apache_beam.runners.portability.fn_api_runner.worker_handlers
+
   [Datasets]
   source = guid-src
   destination = guid-dest
