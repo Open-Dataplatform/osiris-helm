@@ -2,7 +2,7 @@ apiVersion: v2
 name: osiris-scheduler
 description: A helm chart that facilitates the scheduling of argo workflows
 type: application
-version: 0.1.1
+version: 0.1.2
 
 maintainers:
   - name: MadsHT

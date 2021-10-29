@@ -10,4 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- toYaml .Values.config | nindent 2 }}
+  conf.ini: |
+{{ (tpl (.Files.Get "files/conf.ini") . ) | indent 4 }}
+{{- .Values.config | indent 4 }}
+{{- toYaml .Values.configFiles | nindent 2 }}
