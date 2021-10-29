@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   osiris-scheduler:
   - apiVersion: v2
+    created: "2021-10-29T10:50:50.979417479Z"
+    description: A helm chart that facilitates the scheduling of argo workflows
+    digest: 5a22ce58bcaa2d1046c90e91b6fae882e41c496f1fbea8ec0ebe9abccb73e2e6
+    maintainers:
+    - name: MadsHT
+    name: osiris-scheduler
+    type: application
+    urls:
+    - https://github.com/Open-Dataplatform/osiris-helm/releases/download/osiris-scheduler-0.1.9/osiris-scheduler-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
     created: "2021-10-29T10:25:12.882394515Z"
     description: A helm chart that facilitates the scheduling of argo workflows
     digest: 4badb9466e3a1b0319262cf5498af821304602afbaa93ecc0d0df2cf4c60ca14
@@ -112,4 +123,4 @@ entries:
     urls:
     - https://github.com/Open-Dataplatform/osiris-helm/releases/download/osiris-transformations-0.1.0/osiris-transformations-0.1.0.tgz
     version: 0.1.0
-generated: "2021-10-29T10:25:12.882621822Z"
+generated: "2021-10-29T10:50:50.97949618Z"
