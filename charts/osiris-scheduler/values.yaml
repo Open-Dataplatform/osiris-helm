@@ -8,6 +8,8 @@ global:
   name: rando
   # Name of the secret needed for the app to run
   secretName: rando
+  # The server to get the secret from
+  secretServer: http://vault.tooling.svc:8200
   # The environment the the app will run in
   environment: test
 
