@@ -8,7 +8,6 @@ global:
   name: rando
   # Name of the secret needed for the app to run
   secretName: rando
-
   # OBS THIS IS OVERRIDEN BY YGGDRASIL
   # The server to get the secret from
   secretServer: http://vault.tooling.svc:8200
@@ -32,13 +31,13 @@ workflowTemplate:
   # The command needed to run the application code
   command: python -m rando
 
-  # The path the config will be on
+  # The path the config will be placed in
   # The name of the file is also derived from this
-  configPath: /etc/osiris-conf/conf.ini
+  configPath: /etc/osiris-conf
 
-  # The path the credentils file should be on
+  # The path the credentils file should be placed in
   # The name of the file is also derived from this
-  credentialsPath: /etc/osiris-creds/credentials.ini
+  credentialsPath: /etc/osiris-creds
 
   # Pod GC strategy must be one of the following:
   # * OnPodCompletion - delete pods immediately when pod is completed (including errors/failures)
@@ -69,27 +68,46 @@ cron:
   # * Forbid: do not allow any new while there are old
   concurrencyPolicy: "Forbid"
 
-# This will be appended on the `charts/osiris-scheduler/files/config.ini`
-# The config.ini file exists for me to template default values pr environment.
-config: |
-  [Logging]
-  configuration_file = /etc/osiris/log.conf
-  disable_logger_labels =
-      apache_beam.runners.portability.fn_api_runner.fn_runner
-      azure.core.pipeline.policies.http_logging_policy
-      azure.identity._internal.get_token_mixin
-      apache_beam.runners.portability.fn_api_runner.translations
-      apache_beam.runners.worker.statecache
-      apache_beam.runners.portability.fn_api_runner.worker_handlers
 
-  [Datasets]
-  source = guid-src
-  destination = guid-dest
-  model = harmonie
-  batch_size = 5
+secretTemplate:
+  # https://external-secrets.io/guides-templating/
+  credentials.ini: |
+    [Authorization]
+    tenant_id = {{`{{ .tenantId | toString }}`}}
+    client_id = {{`{{ .clientId | toString }}`}}
+    client_secret = {{`{{ .clientSecret | toString }}`}}
 
 # Config take the content a builds files from the and adds them in the pod under /etc/osiris/
 configFiles:
+  conf.ini: |
+    [Logging]
+    configuration_file = /etc/osiris-conf/log.conf
+    disable_logger_labels =
+        apache_beam.runners.portability.fn_api_runner.fn_runner
+        azure.core.pipeline.policies.http_logging_policy
+        azure.identity._internal.get_token_mixin
+        apache_beam.runners.portability.fn_api_runner.translations
+        apache_beam.runners.worker.statecache
+        apache_beam.runners.portability.fn_api_runner.worker_handlers
+
+    [Azure Storage]
+    account_url = https://dpcontentstoragetest.dfs.core.windows.net
+    filesystem_name = datasets
+    [Prometheus]
+    hostname = tooling-prometheus-test-pushgateway.monitoring.svc:9091
+    environment = test
+    name = rando
+    [Jaeger Agent]
+    reporting_host = localhost
+    reporting_port = localhost
+    name = rando
+
+    [Datasets]
+    source = guid-src
+    destination = guid-dest
+    model = harmonie
+    batch_size = 5
+
   log.conf: |
     [loggers]
     keys=root
