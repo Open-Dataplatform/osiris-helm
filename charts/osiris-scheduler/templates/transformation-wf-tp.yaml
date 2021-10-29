@@ -53,13 +53,13 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
       - |
-{{ .Values.workflowTemplate.command | indent 8 }} --conf {{ .Values.workflowTemplate.configPath }} --credentials {{ .Values.workflowTemplate.credentialsPath }} {{`{{inputs.parameters.arguments}}`}}
+{{ .Values.workflowTemplate.command | indent 8 }} --conf {{ .Values.workflowTemplate.configPath }}/conf.ini --credentials {{ .Values.workflowTemplate.credentialsPath }}/credentials.ini {{`{{inputs.parameters.arguments}}`}}
       volumeMounts:
         - name: app-config-cm
-          mountPath: "{{ .Values.workflowTemplate.configPath | dir}}"
+          mountPath: "{{ .Values.workflowTemplate.configPath }}"
           readOnly: true
         - name: app-secrets
-          mountPath: "{{ .Values.workflowTemplate.credentialsPath | dir}}"
+          mountPath: "{{ .Values.workflowTemplate.credentialsPath }}"
           readOnly: true
 {{- if .Values.jaeger.enabled }}
     sidecars:

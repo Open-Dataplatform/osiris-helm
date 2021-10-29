@@ -10,7 +10,4 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{ .Values.workflowTemplate.configPath | base }}: |
-{{ (tpl (.Files.Get "files/conf.ini") . ) | indent 4 }}
-{{ .Values.config | indent 4 }}
-{{ toYaml .Values.configFiles | nindent 2 }}
+{{- toYaml .Values.configFiles | nindent 2 }}
