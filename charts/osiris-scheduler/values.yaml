@@ -30,8 +30,11 @@ workflowTemplate:
   command: python -m rando
 
   # The path the config will be on
+  # The name of the file is also derived from this
   configPath: /etc/osiris-conf/conf.ini
 
+  # The path the credentils file should be on
+  # The name of the file is also derived from this
   credentialsPath: /etc/osiris-creds/credentials.ini
 
   # Pod GC strategy must be one of the following:
