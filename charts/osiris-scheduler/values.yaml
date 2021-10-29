@@ -60,8 +60,8 @@ cron:
 # The config.ini file exists for me to template default values pr environment.
 config: |
   [Datasets]
-  source = a1248010-e46e-4491-11de-08d8fda51d00
-  destination = 1bf31823-4e55-4956-88cc-08d9834acce7
+  source = guid-src
+  destination = guid-dest
   model = harmonie
   batch_size = 5
 
