@@ -56,10 +56,10 @@ spec:
 {{ .Values.workflowTemplate.command | indent 8 }} --conf {{ .Values.workflowTemplate.configPath }} --credentials {{ .Values.workflowTemplate.credentialsPath }} {{`{{inputs.parameters.arguments}}`}}
       volumeMounts:
         - name: app-config-cm
-          mountPath: "{{ .Values.workflowTemplate.configPath }}"
+          mountPath: "{{ .Values.workflowTemplate.configPath | dir}}"
           readOnly: true
         - name: app-secrets
-          mountPath: "{{ .Values.workflowTemplate.credentialsPath }}"
+          mountPath: "{{ .Values.workflowTemplate.credentialsPath | dir}}"
           readOnly: true
 {{- if .Values.jaeger.enabled }}
     sidecars:
