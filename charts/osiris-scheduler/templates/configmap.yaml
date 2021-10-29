@@ -12,5 +12,5 @@ metadata:
 data:
   conf.ini: |
 {{ (tpl (.Files.Get "files/conf.ini") . ) | indent 4 }}
-{{- .Values.config | indent 4 }}
-{{- toYaml .Values.configFiles | nindent 2 }}
+{{ .Values.config | indent 4 }}
+{{ toYaml .Values.configFiles | nindent 2 }}
