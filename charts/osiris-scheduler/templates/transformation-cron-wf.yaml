@@ -13,6 +13,7 @@ spec:
   concurrencyPolicy: "{{ .Values.cron.concurrencyPolicy }}"
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 3
+  suspend: {{ .Values.cron.suspend }}
   workflowSpec:
     entrypoint: cron-tasks
     templates:
