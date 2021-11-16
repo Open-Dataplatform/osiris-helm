@@ -46,7 +46,7 @@ spec:
           name: {{ template "osiris-scheduler.name" . }}-cm
       - name: app-secrets
         secret:
-          secretName: app-secrets
+          secretName: {{ template "osiris-scheduler.name" . }}-secrets
     container:
       image: "{{ .Values.workflowTemplate.image.repository }}:{{ .Values.workflowTemplate.image.tag }}"
       imagePullPolicy: {{ .Values.workflowTemplate.image.pullPolicy }}
