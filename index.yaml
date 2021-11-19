@@ -2,6 +2,30 @@ apiVersion: v1
 entries:
   drill:
   - apiVersion: v2
+    created: "2021-11-19T13:21:14.514150253Z"
+    dependencies:
+    - condition: lethe.enabled
+      name: lethe
+      repository: https://open-olympus-project.github.io/repo-helm/
+      version: 0.1.x
+    - condition: janus.enabled
+      name: janus
+      repository: https://open-olympus-project.github.io/repo-helm/
+      version: 0.1.x
+    - name: zookeeper
+      repository: https://open-dataplatform.github.io/osiris-helm/
+      version: 0.1.x
+    description: Helm Charts for deploying Apache Drill Clusters on Kubernetes
+    digest: 6427dc75761798fff409bdca1ea1da804e5f803c910c68c6e7a6f8c740ce9936
+    home: http://drill.apache.org/
+    maintainers:
+    - name: MadsHT
+    name: drill
+    type: application
+    urls:
+    - https://github.com/Open-Dataplatform/osiris-helm/releases/download/drill-0.1.1/drill-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     created: "2021-11-19T13:12:57.507201225Z"
     dependencies:
     - condition: lethe.enabled
@@ -228,6 +252,21 @@ entries:
   zookeeper:
   - apiVersion: v2
     appVersion: 3.6.0
+    created: "2021-11-19T13:21:14.688087834Z"
+    description: Helm Charts for deploying Apache Zookeeper Quorum on Kubernetes
+    digest: dd544bfa36f1a2c209770077281663454b8abce78b9f81ebc8be1fb4bb3d5311
+    home: http://zookeeper.apache.org/
+    maintainers:
+    - name: MadsHT
+    name: zookeeper
+    sources:
+    - https://github.com/Agirish/drill-helm-charts
+    type: application
+    urls:
+    - https://github.com/Open-Dataplatform/osiris-helm/releases/download/zookeeper-0.1.1/zookeeper-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 3.6.0
     created: "2021-11-19T13:07:10.409848522Z"
     description: Helm Charts for deploying Apache Zookeeper Quorum on Kubernetes
     digest: f71fd97e64ef18be773fce304e6fd3c5638de248ee81512b12d01cec9723d7aa
@@ -241,4 +280,4 @@ entries:
     urls:
     - https://github.com/Open-Dataplatform/osiris-helm/releases/download/zookeeper-0.1.0/zookeeper-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-19T13:12:57.507289327Z"
+generated: "2021-11-19T13:21:14.688200337Z"
