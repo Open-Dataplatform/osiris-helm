@@ -1,6 +1,6 @@
 apiVersion: v2
 name: zookeeper
-version: 0.1.0
+version: 0.1.1
 appVersion: 3.6.0
 description: Helm Charts for deploying Apache Zookeeper Quorum on Kubernetes
 type: application
