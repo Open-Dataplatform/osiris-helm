@@ -6,14 +6,18 @@ metadata:
 spec:
   serviceName: zk-service
   replicas: 1
-  selector: 
-    matchLabels: 
+  selector:
+    matchLabels:
       app: zk-quorum
   template:
     metadata:
       labels:
         app: zk-quorum
     spec:
+{{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ . | toYaml | indent 10 }}
+{{- end }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
