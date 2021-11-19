@@ -200,4 +200,20 @@ entries:
     urls:
     - https://github.com/Open-Dataplatform/osiris-helm/releases/download/osiris-transformations-0.1.0/osiris-transformations-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-16T13:46:37.101876906Z"
+  zookeeper:
+  - apiVersion: v2
+    appVersion: 3.6.0
+    created: "2021-11-19T13:07:10.409848522Z"
+    description: Helm Charts for deploying Apache Zookeeper Quorum on Kubernetes
+    digest: f71fd97e64ef18be773fce304e6fd3c5638de248ee81512b12d01cec9723d7aa
+    home: http://zookeeper.apache.org/
+    maintainers:
+    - name: MadsHT
+    name: zookeeper
+    sources:
+    - https://github.com/Agirish/drill-helm-charts
+    type: application
+    urls:
+    - https://github.com/Open-Dataplatform/osiris-helm/releases/download/zookeeper-0.1.0/zookeeper-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-11-19T13:07:10.409951826Z"
