@@ -1,3 +1,4 @@
 charts/**/charts/*
+!charts/apache-drill/charts/zookeeper
 charts/**/Chart.lock
 charts/osiris-scheduler/values.example.yaml
