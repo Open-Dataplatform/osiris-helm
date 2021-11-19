@@ -14,6 +14,10 @@ spec:
       labels:
         app: drill-app
     spec:
+{{- with .Values.drill.imagePullSecrets }}
+      imagePullSecrets:
+{{ . | toYaml | indent 10 }}
+{{- end }}
       affinity:
 {{- with .Values.drill.nodeSelectorTerms }}
         nodeAffinity:
