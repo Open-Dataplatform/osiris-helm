@@ -33,6 +33,8 @@ spec:
         - name: zk-pod
           imagePullPolicy: Always
           image: {{ .Values.image }}
+          command: ["/bin/sh"]
+          args: ["/usr/bin/start.sh"]
           ports:
             - containerPort: 2181
               name: client
