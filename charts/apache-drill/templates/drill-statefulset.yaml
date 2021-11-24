@@ -55,8 +55,10 @@ spec:
               value: "drill-bit"
             - name: DRILL_ZK_ROOT
               value: {{.Values.drill.id}}
-            - name: DRILL_MAX_MEMORY
-              value: {{.Values.drill.memory}}
+            - name: DRILL_HEAP
+              value: {{.Values.drill.heapMemory}}
+            - name: DRILL_MAX_DIRECT_MEMORY
+              value: {{.Values.drill.directMemory}}
             - name: DRILL_HTTP_PORT
               value: "{{.Values.drill.httpPort}}"
             - name: DRILL_USER_SERVER_PORT
