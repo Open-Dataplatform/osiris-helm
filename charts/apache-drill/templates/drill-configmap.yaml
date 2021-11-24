@@ -4,7 +4,4 @@ kind: ConfigMap
 metadata:
   name: drill-es-tpl-cm
 data:
-{{- range $path, $_ :=  .Files.Glob  "conf/*" }}
-  {{ $path | replace "files/" "" }}: |
-{{ $.Files.Get $path | indent 4 }}
-{{- end }}
+{{ (tpl (.Files.Glob "conf/*").AsConfig . ) | indent 2 }}
