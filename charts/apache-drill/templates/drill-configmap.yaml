@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.drill.id}}-es-tpl-cm
+data:
+{{- range $path, $_ :=  .Files.Glob  "conf/*" }}
+  {{ $path | replace "files/" "" }}: |
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}

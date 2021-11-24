@@ -39,8 +39,6 @@ spec:
         - name: drill-pod
           imagePullPolicy: {{ .Values.drill.imagePullPolicy }}
           image: {{.Values.drill.image}}
-          command: ["/bin/sh"]
-          args: ["/usr/bin/start.sh"]
           ports:
             - containerPort: {{ .Values.drill.httpPort }}
               name: http
