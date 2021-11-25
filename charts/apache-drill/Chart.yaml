@@ -10,13 +10,13 @@ maintainers:
 
 dependencies:
 - name: lethe
-  version: "0.1.x"
+  version: "0.1.4"
   repository: https://open-olympus-project.github.io/repo-helm/
   condition: lethe.enabled
 - name: janus
-  version: "0.1.x"
+  version: "0.1.3"
   repository: https://open-olympus-project.github.io/repo-helm/
   condition: janus.enabled
 - name: zookeeper
-  version: 0.1.x
+  version: 0.1.5
   repository: 'https://open-dataplatform.github.io/osiris-helm/'
