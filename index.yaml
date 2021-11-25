@@ -2,6 +2,30 @@ apiVersion: v1
 entries:
   drill:
   - apiVersion: v2
+    created: "2021-11-25T12:36:11.75080397Z"
+    dependencies:
+    - condition: lethe.enabled
+      name: lethe
+      repository: https://open-olympus-project.github.io/repo-helm/
+      version: 0.1.x
+    - condition: janus.enabled
+      name: janus
+      repository: https://open-olympus-project.github.io/repo-helm/
+      version: 0.1.x
+    - name: zookeeper
+      repository: https://open-dataplatform.github.io/osiris-helm/
+      version: 0.1.x
+    description: Helm Charts for deploying Apache Drill Clusters on Kubernetes
+    digest: a8f427275cdeced08ae69bac35c2eabb7567646d6717ed820187f4c1bca83da5
+    home: http://drill.apache.org/
+    maintainers:
+    - name: MadsHT
+    name: drill
+    type: application
+    urls:
+    - https://github.com/Open-Dataplatform/osiris-helm/releases/download/drill-0.1.17/drill-0.1.17.tgz
+    version: 0.1.17
+  - apiVersion: v2
     created: "2021-11-25T12:27:56.903748756Z"
     dependencies:
     - condition: lethe.enabled
@@ -700,4 +724,4 @@ entries:
     urls:
     - https://github.com/Open-Dataplatform/osiris-helm/releases/download/zookeeper-0.1.0/zookeeper-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-25T12:27:56.904015339Z"
+generated: "2021-11-25T12:36:11.751104273Z"
