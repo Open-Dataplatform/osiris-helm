@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drill-es-tpl-cm
+data:
+{{ (tpl (.Files.Glob "secret-templates/*").AsConfig . ) | indent 2 }}
