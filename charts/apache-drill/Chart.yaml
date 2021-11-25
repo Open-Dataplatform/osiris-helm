@@ -14,7 +14,7 @@ dependencies:
   repository: https://open-olympus-project.github.io/repo-helm/
   condition: lethe.enabled
 - name: janus
-  version: "0.1.3"
+  version: "0.1.4"
   repository: https://open-olympus-project.github.io/repo-helm/
   condition: janus.enabled
 - name: zookeeper
