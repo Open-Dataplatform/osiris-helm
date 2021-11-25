@@ -55,6 +55,8 @@ spec:
               value: "drill-bit"
             - name: DRILL_ZK_ROOT
               value: {{.Values.drill.id}}
+            - name: ZK_HOST
+              value: "zk-0.zk-service.apache-drill.svc.cluster.local"
             - name: DRILL_HEAP
               value: {{.Values.drill.heapMemory}}
             - name: DRILL_MAX_DIRECT_MEMORY
